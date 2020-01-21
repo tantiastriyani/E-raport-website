@@ -2,53 +2,25 @@
 
 include "conn.php";
 
-$id_pengampu= $_GET['id_pengampu'];
+$kode_jadwal= $_GET['kode_jadwal'];
 
-
-
-$id_dosen= $_GET['id_dosen'];
-
-$query1= mysqli_query($koneksi, "SELECT * FROM data_dosen WHERE id_dosen='$id_dosen'");
-
-$result1= mysqli_fetch_array($query1);
-
-
-
-
-
-
-$id_matkul= $_GET['id_matkul'];
-
-$query3 = mysqli_query($koneksi,"SELECT * FROM setup_matkul WHERE id_matkul='$id_matkul'");
-
-$result3 = mysqli_fetch_array($query3);
-
-
-
-$id_kelas= $_GET['id_kelas'];
-
-$query2 = mysqli_query($koneksi,"SELECT * FROM setup_kelas WHERE id_kelas='$id_kelas'");
-
-$result2 = mysqli_fetch_array($query2);
-
-
+$qry=mysqli_query($koneksi,"SELECT * from jadwal JOIN guru ON jadwal.kode_guru = guru.kode_guru JOIN kelas ON jadwal.kode_kelas = kelas.kode_kelas JOIN hari ON jadwal.kode_hari = hari.kode_hari JOIN mata_pelajaran ON jadwal.kode_pelajaran = mata_pelajaran.kode_pelajaran WHERE kode_jadwal='$kode_jadwal'");
+		
+$result1=mysqli_fetch_array($qry);
 
 if(isset($_POST['edit'])){
-  $id_pengampu=($_GET['id_pengampu']);
-  
-  $id_matkul=ucwords(htmlentities($_POST['id_matkul']));
-  $qry2 = mysqli_query($koneksi,"SELECT * FROM setup_matkul WHERE id_matkul='$id_matkul'");
-  $data2 = mysqli_fetch_array($qry2);
+  $kode_kelas=htmlentities($_POST['kode_kelas']);
+	$kode_guru=htmlentities($_POST['kode_guru']);
+	$kode_hari=htmlentities($_POST['kode_hari']);
+	$kode_pelajaran=htmlentities($_POST['kode_pelajaran']);
+	$jam_mulai=htmlentities($_POST['jam_mulai']);
+	$jam_selesai=htmlentities($_POST['jam_selesai']);
 
-  $id_kelas=ucwords(htmlentities($_POST['id_kelas']));
-  $qry = mysqli_query($koneksi,"SELECT * FROM setup_kelas WHERE id_kelas='$id_kelas'");
-  $data1 = mysqli_fetch_array($qry);
-
-  $query=mysqli_query($koneksi,"UPDATE data_pengampu set id_kelas='$data1[id_kelas]', id_matkul='$data2[id_matkul]' where id_pengampu='$id_pengampu'");
+  $query=mysqli_query($koneksi,"UPDATE jadwal set kode_kelas='$kode_kelas', kode_guru='$kode_guru',kode_hari='$kode_hari', kode_pelajaran='$kode_pelajaran',jam_mulai='$jam_mulai', jam_selesai='$jam_selesai' where kode_jadwal='$kode_jadwal'");
   if($query){
-    ?><script language="javascript">document.location.href="?page=data_pengampu&status=31";</script><?php
+    ?><script language="javascript">document.location.href="?page=jadwal_pelajaran&status=31";</script><?php
   }else{
-    ?><script language="javascript">document.location.href="?page=data_pengampu&status=32";</script><?php
+    ?><script language="javascript">document.location.href="?page=jadwal_pelajaran&status=32";</script><?php
   }
    
 }else{
@@ -68,7 +40,7 @@ if(isset($_POST['edit'])){
           <div class="col-lg-12">
                     <div class="panel panel-success">
                         <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-bank"></i> Edit Data Pengampu</h3> 
+                        <h3 class="panel-title"><i class="fa fa-bank"></i> Edit Data Jadwal</h3> 
                         </div>
                         <div class="panel-body">
                         <div class="table-responsive">
@@ -79,30 +51,18 @@ if(isset($_POST['edit'])){
             <tr valign="top">
               <td>
                   <table border="0" cellpadding="0" cellspacing="0"  id="id-form">
-                    
-                    <tr>
-                      <th valign="top">Nama Dosen</th>
-                      <td><input type="text" class="form-control" name="nama_dosen" value="<?php echo $result1['nama_dosen']; ?>"/></td>
-                      <td></td>
-                    </tr>
-                     <tr>
-                      <th valign="top">NIP</th>
-                      <td><input type="text" class="form-control" name="NIP" value="<?php echo $result1['nip']; ?>"/></td>
-                      <td></td>
-                    </tr>
-
-                    <tr>
-                      <th>Mata Kuliah</th>
-                      <td><select name="id_matkul"  class="form-control">
+                   <tr>
+                      <th>Kelas</th>
+                      <td><select name="kode_kelas"  class="form-control">
 
                           <?php
-              $matkul=mysqli_query($koneksi,"select * from setup_matkul order by nama_matkul asc");
-              while($row2=mysqli_fetch_array($matkul)){
-              ?>
-                <option value="<?php echo $row2['id_matkul'];?>"><?php echo $row2['nama_matkul'];?></option>
-              <?php
-              }
-              ?>    
+						  $kelas=mysqli_query($koneksi,"select * from kelas");
+						  while($row3=mysqli_fetch_array($kelas)){
+						  ?>
+							  <option <?php if($result1["kode_kelas"]==$row3['kode_kelas']){ echo "selected"; } ?> value="<?php echo $row3['kode_kelas'];?>"><?php echo $row3['kelas']." ".$row3['nama_kelas'];?></option>
+						  <?php
+						  }
+						  ?>    
   
                         </select>
                       </td>
@@ -110,22 +70,67 @@ if(isset($_POST['edit'])){
                     </tr>
                     
                     <tr>
-                      <th valign="top">Kelas</th>
-                      <td><select name="id_kelas"  class="form-control">
-
+                      <th>Guru</th>
+                      <td><select name="kode_guru"  class="form-control">
+                      
                       <?php
-              $kelas=mysqli_query($koneksi,"select * from setup_kelas order by nama_kelas asc");
-              while($row4=mysqli_fetch_array($kelas)){
-              ?>
-                <option value="<?php echo $row4['id_kelas'];?>"><?php echo $row4['nama_kelas'];?></option>
-              <?php
-              }
-              ?>    
+					  $guru=mysqli_query($koneksi,"select * from guru order by nama_guru asc");
+					  while($row1=mysqli_fetch_array($guru)){
+					  ?>
+                          <option <?php if($result1["kode_guru"]==$row1['kode_guru']){ echo "selected"; } ?> value="<?php echo $row1['kode_guru'];?>"><?php echo $row1['nama_guru'];?> [ <?php echo $row1['nip'];?> ] </option>
+					  <?php
+					  }
+					  ?>                          
+                          
+                        </select>
+                      </td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>hari</th>
+                      <td><select name="kode_hari"  class="form-control">
+                      
+                      <?php
+					  $hari=mysqli_query($koneksi,"select * from hari");
+					  while($row0=mysqli_fetch_array($hari)){
+					  ?>
+                          <option <?php if($result1["kode_hari"]==$row0['kode_hari']){ echo "selected"; } ?> value="<?php echo $row0['kode_hari'];?>"><?php echo $row0['nama_hari'];?> </option>
+					  <?php
+					  }
+					  ?>                          
+                          
+                        </select>
+                      </td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Mata Pelajaran</th>
+                      <td><select name="kode_pelajaran" class="form-control">
+
+                          <?php
+						  $mapel=mysqli_query($koneksi,"select * from mata_pelajaran order by nama_pelajaran asc");
+						  while($row2=mysqli_fetch_array($mapel)){
+						  ?>
+							  <option <?php if($result1["kode_pelajaran"]==$row2['kode_pelajaran']){ echo "selected"; } ?> value="<?php echo $row2['kode_pelajaran'];?>"><?php echo $row2['nama_pelajaran'];?></option>
+						  <?php
+						  }
+						  ?>    
   
                         </select>
                       </td>
                       <td></td>
                     </tr>
+                    <tr>
+                      <th>Jam Mulai</th>
+                      <td><input type="time" class="form-control" name="jam_mulai" value="<?php echo $result1["jam_mulai"]; ?>"/></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Jam Selesai</th>
+                      <td><input type="time" class="form-control" name="jam_selesai" value="<?php echo $result1["jam_selesai"]; ?>"/></td>
+                      <td></td>
+                    </tr>
+                  
                     
                     <tr>
                       <th>&nbsp;</th>

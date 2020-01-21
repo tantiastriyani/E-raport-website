@@ -4,9 +4,10 @@ include "conn.php";
 
 if(isset($_POST['submit'])){
 	
-	$nama_kelas=strtoupper(htmlentities($_POST['nama_kelas']));
+	$kelas=strtoupper(htmlentities($_POST['kelas']));
+	$nama_kelas=ucwords(htmlentities($_POST['nama_kelas']));
 	
-	$query=mysqli_query($koneksi, "insert into setup_kelas values('','$nama_kelas')");
+	$query=mysqli_query($koneksi, "insert into kelas values('', '$kelas', '$nama_kelas', 'Aktif')");
 	
 	if($query){
 		?><script language="javascript">document.location.href="?page=setup_kelas&status=1";</script><?php
@@ -18,12 +19,11 @@ if(isset($_POST['submit'])){
 	unset($_POST['submit']);
 }
 if($_GET['mode']=='delete'){
-  $id_kelas=$_GET['id_kelas'];
-  $nama_kelas=$_GET['nama_kelas'];
+  $kode_kelas=$_GET['kode_kelas'];
 
 
   
-  $query=mysqli_query($koneksi,"delete from setup_kelas where id_kelas='$id_kelas'");
+  $query=mysqli_query($koneksi,"delete from kelas where kode_kelas='$kode_kelas'");
 
   if($query){
     ?><script language="javascript">document.location.href="?page=setup_kelas&status=11";</script><?php
@@ -32,11 +32,12 @@ if($_GET['mode']=='delete'){
   }
 }
 if($_GET['mode']=='update'){
-  $id_kelas=$_GET['id_kelas'];
+  $kode_kelas=$_GET['kode_kelas'];
 
+  $kelas=htmlentities($_POST['kelas']);
   $nama_kelas=strtoupper(htmlentities($_POST['nama_kelas']));
   
-  $query=mysqli_query("update setup_kelas set nama_kelas='$nama_kelas' where id_kelas='$id_kelas'");
+  $query=mysqli_query("update kelas set kelas='$kelas', nama_kelas='$nama_kelas' where kode_kelas='$kode_kelas'");
   
   if($query){
     ?><script language="javascript">document.location.href="?page=setup_kelas&status=15";</script><?php
@@ -101,6 +102,10 @@ if($_GET['mode']=='update'){
               <td>
                   <table border="0" cellpadding="0" cellspacing="0"  id="id-form">
                     <tr>
+                      <th>Kelas </th>
+                      <td><input style="width: 350px;" type="text" class="form-control" name="kelas"/></td>
+                      <td></td>
+                    </tr><tr>
                       <th>Nama Kelas </th>
                       <td><input style="width: 350px;" type="text" class="form-control" name="nama_kelas"/></td>
                       <td></td>
@@ -123,23 +128,25 @@ if($_GET['mode']=='update'){
         <table border="0" width="61%" cellpadding="0" cellspacing="0" class="table table-hover table table-bordered">
         <tr>
             <th width="16%" class="info">Nomor</th>
-            <th width="68%" class="info">Kelas</th>
+            <th width="18%" class="info">Kelas</th>
+            <th width="50%" class="info">Nama Kelas</th>
             <th width="16%" class="info">Aksi</th>
         </tr>
         
         
         <?php
-		$view=mysqli_query($koneksi,"select * from setup_kelas order by nama_kelas asc");
+		$view=mysqli_query($koneksi,"select * from kelas");
 		
 		$no=0;
 		while($row=mysqli_fetch_array($view)){
 		?>	
 		<tr>
             <td><?php echo $no=$no+1;?></td>
+            <td><?php echo $row['kelas'];?></td>
             <td><?php echo $row['nama_kelas'];?></td>
             <td class="options-width">
-            <a href="?page=setup_kelas&mode=delete&id_kelas=<?php echo $row['id_kelas'];?>&nama_kelas=<?php echo $row['nama_kelas'];?>" title="Delete"><button type="button" class="btn btn-primary"> <span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button></a>
-            <a href="?page=form_edit_skelas&mode=update&id_kelas=<?php echo $row['id_kelas'];?>&nama_kelas=<?php echo $row['nama_kelas'];?>" title="Edit"><button type="button" class="btn btn-primary"> <span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button></a>            
+            <a href="?page=setup_kelas&mode=delete&kode_kelas=<?php echo $row['kode_kelas'];?>&nama_kelas=<?php echo $row['nama_kelas'];?>" title="Delete"><button type="button" class="btn btn-primary"> <span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button></a>
+            <a href="?page=form_edit_skelas&mode=update&kode_kelas=<?php echo $row['kode_kelas'];?>&nama_kelas=<?php echo $row['nama_kelas'];?>" title="Edit"><button type="button" class="btn btn-primary"> <span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button></a>            
             </td>
         </tr>
 		<?php

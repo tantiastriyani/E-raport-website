@@ -4,21 +4,35 @@ include "conn.php";
 
 if(isset($_POST['submit'])){
 	
-	$nama_dosen=ucwords(htmlentities($_POST['nama_dosen']));
+	$nama_guru=ucwords(htmlentities($_POST['nama_guru']));
 	$nip=htmlentities($_POST['nip']);
 	$kelamin=htmlentities($_POST['kelamin']);
-  $alamat=htmlentities($_POST['alamat']);
+  $alamat=$_POST['alamat'];
+  $agama=htmlentities($_POST['agama']);
 	$username=htmlentities($_POST['username']);
 	$password=md5(htmlentities($_POST['password']));
 	
-	$sql="insert into data_dosen values('','$nama_dosen','$nip','$kelamin', '$alamat', '$username','$password')";
+	$sql_user="insert into user values('', '$username','$password', 'guru')";
+  $qry = mysqli_query($koneksi, $sql_user);
+	if($qry){
+    $id_user = mysqli_insert_id($koneksi);
+    $sql="insert into guru values('', '$id_user','$nip','$nama_guru','$kelamin', '$alamat', '$agama', 'aktif')";
     $query = mysqli_query($koneksi, $sql);
-	
-	if($query){
-		?><script language="javascript">document.location.href="?page=data_dosen&status=1";</script><?php
-	}else{
-		?><script language="javascript">document.location.href="?page=data_dosen&status=2";</script><?php
-	}
+    
+    if($query){
+      ?>
+      <script language="javascript">document.location.href="?page=data_guru&status=1";</script>
+      <?php
+    }else{
+      ?>
+      <script language="javascript">document.location.href="?page=data_guru&status=2";</script>
+      <?php
+    }  
+  } else {
+    ?>
+    <script language="javascript">document.location.href="?page=data_guru&status=2";</script>
+    <?php
+  }
 	
 }else{
 	unset($_POST['submit']);
@@ -26,14 +40,16 @@ if(isset($_POST['submit'])){
 
 if($_GET['mode']=='delete'){
   $username=$_GET['username'];
-  $id_dosen=$_GET['id_dosen'];
+  $id_user=$_GET['id_user'];
   
-  $query=mysqli_query($koneksi, "delete from data_dosen where id_dosen='$id_dosen'");
+  $query=mysqli_query($koneksi, "delete from user where id_user='$id_user'");
+  
+  $query1=mysqli_query($koneksi, "delete from guru where id_user='$id_user'");
   
   if($query){
-    ?><script language="javascript">document.location.href="?page=data_dosen&status=3";</script><?php
+    ?><script language="javascript">document.location.href="?page=data_guru&status=3";</script><?php
   }else{
-    ?><script language="javascript">document.location.href="?page=data_dosen&status=4";</script><?php
+    ?><script language="javascript">document.location.href="?page=data_guru&status=4";</script><?php
   }
 }
 
@@ -80,22 +96,22 @@ if($_GET['mode']=='delete'){
           <div class="col-lg-12">
                     <div class="panel panel-success">
                         <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-user"></i> Data Dosen</h3> 
+                        <h3 class="panel-title"><i class="fa fa-user"></i> Data Guru</h3> 
                         </div>
                         <div class="panel-body">
                         <div class="table-responsive">
     <div class="form-group">
-    		<form action="?page=data_dosen" method="post">
-          <input type='text' class="form-control" style="margin-bottom: 4px;" name='qcari' placeholder='Cari berdasarkan NIP atau Nama Dosen' /> 
-           <input type='submit' value='Cari Data' class="btn btn-sm btn-primary" /> <a href='?page=data_dosen' class="btn btn-sm btn-success" >Refresh</i></a><br><br>
+    		<form action="?page=data_guru" method="post">
+          <input type='text' class="form-control" style="margin-bottom: 4px;" name='qcari' placeholder='Cari berdasarkan NIP atau Nama Guru' /> 
+           <input type='submit' value='Cari Data' class="btn btn-sm btn-primary" /> <a href='?page=data_guru' class="btn btn-sm btn-success" >Refresh</i></a><br><br>
 
  	        <table border="0" width="100%" cellpadding="0" cellspacing="0">
             <tr valign="top">
               <td>
                   <table border="0" cellpadding="0" cellspacing="0"  id="id-form">
                     <tr>
-                      <th>Nama Dosen </th>
-                      <td><input type="text" class="form-control" name="nama_dosen"/></td>
+                      <th>Nama Guru </th>
+                      <td><input type="text" class="form-control" name="nama_guru"/></td>
                       <td></td>
                     </tr>
                      <tr>
@@ -112,10 +128,15 @@ if($_GET['mode']=='delete'){
                       </td>
                       <td></td>
                     </tr>
+                    <tr>
                     <th>Alamat</th>
-                    <td><textarea name="alamat"></textarea></td>
+                    <td><textarea name="alamat" class="form-control"></textarea></td>
                     </tr>
-                
+                    <tr>
+                      <th>Agama</th>
+                      <td><input type="text" class="form-control" name="agama"/></td>
+                      <td></td>
+                    </tr>
                      <tr>
                       <th>Username</th>
                       <td><input type="text" class="form-control" name="username" /></td>
@@ -148,28 +169,27 @@ if($_GET['mode']=='delete'){
         <table border="0" width="100%" cellpadding="0" cellspacing="0" class="table table-hover table table-bordered">
         <tr>
             <th width="5%" class="info">Nomor</th>
-            <th width="26%" class="info">Nama Dosen</th>
-            <th width="17%" class="info">NIP</th>
-            <th width="7%" class="info">Kelamin</th>
+            <th width="26%" class="info">Nama Guru</th>
+            <th width="10%" class="info">NIP</th>
+            <th width="12%" class="info">Kelamin</th>
+            <th width="12%" class="info">Agama</th>
             <th width="20%" class="info">Alamat</th>
-
-          
-            <th width="11%" class="info"><a href="">Username</th>
-            <th width="15%" class="info"><a href="">Password</th>
             <th width="15%" class="info"><a href="">Aksi</a></th>
         </tr>
         
         
         <?php
-$query1="select * from data_dosen order by nama_dosen asc";
+        $query1="select * from guru join user on guru.id_user = user.id_user order by nama_guru asc";
                     
-                    if(isset($_POST['qcari'])){
-                 $qcari=$_POST['qcari'];
-                 $query1="SELECT * FROM  data_dosen
-                 where nip like '%$qcari%'
-                 or nama_dosen like '%$qcari%'  ";
-                    }
-                    $view=mysqli_query($koneksi,$query1) or die(mysqli_error());
+        if(isset($_POST['qcari'])){
+          $qcari=$_POST['qcari'];
+          $query1="SELECT * FROM guru
+          join user 
+          on guru.id_user = user.id_user
+          where guru.nip like '%$qcari%'
+          or guru.nama_guru like '%$qcari%'  ";
+        }
+        $view=mysqli_query($koneksi,$query1) or die(mysqli_error());
                     
 		
 		$no=0;
@@ -177,15 +197,14 @@ $query1="select * from data_dosen order by nama_dosen asc";
 		?>	
 		<tr>
             <td><?php echo $no=$no+1;?></td>
-            <td><?php echo $row['nama_dosen'];?></td>
+            <td><?php echo $row['nama_guru'];?></td>
             <td><?php echo $row['nip'];?></td>
             <td><?php echo $row['kelamin'];?></td>
-           <td><?php echo $row['alamat'];?></td>
-            <td><?php echo $row['username'];?></td>
-            <td><?php echo $row['password'];?></td>
+            <td><?php echo $row['agama'];?></td>
+            <td><?php echo $row['alamat'];?></td>
             <td class="options-width">
-            <a href="?page=data_dosen&mode=delete&id_dosen=<?php echo $row['id_dosen'];?>&username=<?php echo $row['username'];?>" title="Delete"><button type="button" class="btn btn-primary"> <span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button></a>
-            <a href="?page=form_edit_dosen&mode=update&id_dosen=<?php echo $row['id_dosen'];?>&username=<?php echo $row['username'];?>" title="Edit"><button type="button" class="btn btn-primary"> <span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button></a>            
+            <a href="?page=data_guru&mode=delete&id_user=<?php echo $row['id_user'];?>&username=<?php echo $row['username'];?>" title="Delete"><button type="button" class="btn btn-primary"> <span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button></a>
+            <a href="?page=form_edit_guru&mode=update&id_user=<?php echo $row['id_user'];?>&username=<?php echo $row['username'];?>" title="Edit"><button type="button" class="btn btn-primary"> <span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button></a>
             </td>
         </tr>
 		<?php

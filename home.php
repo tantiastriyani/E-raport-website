@@ -21,7 +21,7 @@ if(isset($_SESSION['username'])){
     
     
 
-    <title>E-Grading | SMK Teladan Kertasmaya</title>
+    <title>D-Rapor | SMK Teladan Kertasmaya</title>
         <link rel="stylesheet" href="css/screen.css" type="text/css" media="screen" title="default" />
         <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
         
@@ -44,7 +44,7 @@ if(isset($_SESSION['username'])){
                   <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
               </div>
             
-            <a href="?page=home.php" class="logo"><b>E-Grading</b></a>
+            <a href="?page=home.php" class="logo"><b>D-Rapor</b></a>
             
             
            
@@ -55,7 +55,7 @@ if(isset($_SESSION['username'])){
            
               <ul class="sidebar-menu" id="nav-accordion">
               
-                  <p class="centered"><img src="images/SMK.jpg" class="img-circle" width="70"></p>
+                  <p class="centered"><img src="images/SMK.jpg" class="img-rounded" width="70"></p>
                   <h5 class="centered"><?php
               echo "Selamat Datang "?> <br>
               <?php echo $_SESSION['username'];?></h5>
@@ -101,7 +101,7 @@ if(isset($_SESSION['username'])){
 
 <footer class="site-footer">
           <div class="text-center">
-              2019 &copy; E-Grading SMK Teladan Kertasmaya
+              2019 &copy; D-Rapor SMK Teladan Kertasmaya
               <a href="home.php?page=admin#" class="go-top">
                   <i class="fa fa-angle-up"></i>
               </a>
@@ -135,7 +135,7 @@ if(isset($_SESSION['username'])){
         $(document).ready(function () {
         var unique_id = $.gritter.add({
             
-            title: 'E-Grading SMK Teladan Kertasmaya',
+            title: 'D-Rapor SMK Teladan Kertasmaya',
           
             text: 'Selamat Datang <?php echo $_SESSION['username']?> <br> <?php
 echo "Waktu Akses : " . date("l") .", ". date("d-m-Y");

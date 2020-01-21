@@ -3,13 +3,13 @@ include "conn.php";
 
 
 
-if (!isset($_GET['id_kelas'])){
+if (!isset($_GET['kode_kelas'])){
 	header( 'Location: home.php?page=setup_kelas');
 }
 
-$id_kelas= $_GET['id_kelas'];
+$kode_kelas= $_GET['kode_kelas'];
 
-$query = mysqli_query($koneksi, "SELECT * FROM setup_kelas WHERE id_kelas='$id_kelas'");
+$query = mysqli_query($koneksi, "SELECT * FROM kelas WHERE kode_kelas='$kode_kelas'");
 
 $result = mysqli_fetch_array($query);
 
@@ -19,9 +19,9 @@ if(mysqli_num_rows($query) < 1){
 }
 if(isset($_POST['edit'])){
   
+  $kelas=strtoupper(htmlentities($_POST['kelas']));
   $nama_kelas=ucwords(htmlentities($_POST['nama_kelas']));
-  echo "$nama_kelas";
-  $query=mysqli_query($koneksi,"UPDATE setup_kelas SET nama_kelas='$nama_kelas' WHERE id_kelas='$id_kelas'");
+  $query=mysqli_query($koneksi,"UPDATE kelas SET kelas='$kelas', nama_kelas='$nama_kelas' WHERE kode_kelas='$kode_kelas'");
   
   
   if($query){
@@ -62,8 +62,13 @@ if(isset($_POST['edit'])){
               <td>
                   <table border="0" cellpadding="0" cellspacing="0"  id="id-form">
                     <tr>
+                      <th>Kelas </th>
+                      <td><input style="width: 350px;" type="text" class="form-control" name="kelas" value="<?php echo $result['kelas']; ?>" /></td>
+                      <td></td>
+                    </tr>
+                    <tr>
                       <th>Nama Kelas </th>
-                      <td><input style="width: 350px;" type="text" class="form-control" name="nama_kelas" value="<?php $result['nama_kelas']; ?>" /></td>
+                      <td><input style="width: 350px;" type="text" class="form-control" name="nama_kelas" value="<?php echo $result['nama_kelas']; ?>" /></td>
                       <td></td>
                     </tr>
                     <tr>

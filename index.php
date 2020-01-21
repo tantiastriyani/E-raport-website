@@ -56,7 +56,7 @@ if (isset($_POST['login'])){
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>E-Grading | SMK Teladan Kertasemaya </title>
+<title>D-Rapor | SMK Teladan Kertasemaya </title>
 <link rel="shortcut icon" href="smk.ico" type="icon">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 
@@ -72,8 +72,9 @@ if (isset($_POST['login'])){
 	<div id="loginbox">
 	
 	 <header class="header align-content-center">
-	 	<img src="images/logo.png" width="150" height="70" style="margin-left: 43%">
-    
+	 	<CENTER>
+	 	<img src="images/logo.png" width="15%" height="10%" style="margin-top: 2%">
+    </CENTER>
     </h1>
     <p class="header__intro text-center">
         SMK Teladan Kertasemaya 

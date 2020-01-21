@@ -12,7 +12,7 @@
                       </a>
                       <ul class="sub">
                           <li><a  href="?page=data_siswa">Data Siswa</a></li>
-                          <li><a  href="?page=data_dosen">Data Guru</a></li>
+                          <li><a  href="?page=data_guru">Data Guru</a></li>
                       </ul>
                     
                   </li>
@@ -33,8 +33,8 @@
                           <span>Penjadwalan</span>
                       </a>
                       <ul class="sub">
-                          <li><a  href="?page=jadwal_ruangkelas">Ruang Kelas</a></li>
-                          <li><a  href="?page=data_pengampu">Pengampu</a></li>
+                          <li><a  href="?page=jadwal_hari">Data Hari</a></li>
+                          <li><a  href="?page=jadwal_pelajaran">Jadwal Pelajaran</a></li>
                       </ul>
     
                   </li>

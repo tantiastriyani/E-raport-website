@@ -3,13 +3,13 @@ include "conn.php";
 
 
 
-if (!isset($_GET['id_dosen'])){
+if (!isset($_GET['id_user'])){
 	header( 'Location: home.php?page=data_dosen');
 }
 
-$id_dosen= $_GET['id_dosen'];
+$id_user= $_GET['id_user'];
 
-$query = mysqli_query($koneksi,"SELECT * FROM data_dosen WHERE id_dosen='$id_dosen'");
+$query = mysqli_query($koneksi,"SELECT * FROM guru JOIN user on guru.id_user = user.id_user WHERE guru.id_user='$id_user'");
 
 $result = mysqli_fetch_array($query);
 
@@ -19,21 +19,22 @@ if(mysqli_num_rows($query) < 1){
 }
 if(isset($_POST['edit'])){
   
-  $nama_dosen=ucwords(htmlentities($_POST['nama_dosen']));
-  $nip=htmlentities($_POST['nip']);
-  $kelamin=htmlentities($_POST['kelamin']);
-  $alamat=htmlentities($_POST['alamat']);
+  $nama_guru=ucwords(htmlentities($_POST['nama_guru']));
+	$nip=htmlentities($_POST['nip']);
+	$kelamin=htmlentities($_POST['kelamin']);
+  $alamat=$_POST['alamat'];
+  $agama=htmlentities($_POST['agama']);
+	$username=htmlentities($_POST['username']);
+	$password=md5(htmlentities($_POST['password']));
+	
+  $query=mysqli_query($koneksi, "UPDATE guru SET nama_guru='$nama_guru', nip='$nip', kelamin='$kelamin', alamat='$alamat', agama='$agama' WHERE id_user='$id_user'");
   
-  $username=htmlentities($_POST['username']);
-  $password=md5(htmlentities($_POST['password']));
-  echo "$nama_dosen";
-  $query=mysqli_query($koneksi, "UPDATE data_dosen SET nama_dosen='$nama_dosen', nip='$nip', kelamin='$kelamin', alamat='$alamat', username='$username', password='$password' WHERE id_dosen='$id_dosen'");
-  
+  $query1=mysqli_query($koneksi, "UPDATE user SET username='$username', password='$password' WHERE id_user='$id_user'");
   
   if($query){
-    ?><script language="javascript">document.location.href="?page=data_dosen&status=19";</script><?php
+    ?><script language="javascript">document.location.href="?page=data_guru&status=19";</script><?php
   }else{
-    ?><script language="javascript">document.location.href="?page=data_dosen&status=20";</script><?php
+    ?><script language="javascript">document.location.href="?page=data_guru&status=20";</script><?php
   }
   
 }else{
@@ -53,7 +54,7 @@ if(isset($_POST['edit'])){
           <div class="col-lg-12">
                     <div class="panel panel-success">
                         <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-book"></i> Edit Data Dosen</h3> 
+                        <h3 class="panel-title"><i class="fa fa-book"></i> Edit Data Guru</h3> 
                         </div>
                         <div class="panel-body">
                         <div class="table-responsive">
@@ -65,8 +66,8 @@ if(isset($_POST['edit'])){
               <td>
                   <table border="0" cellpadding="0" cellspacing="0"  id="id-form">
                     <tr>
-                      <th>Nama Dosen </th>
-                      <td><input type="text" class="form-control" name="nama_dosen" value="<?php echo $result['nama_dosen']; ?>"/></td>
+                      <th>Nama Guru </th>
+                      <td><input type="text" class="form-control" name="nama_guru" value="<?php echo $result['nama_guru']; ?>"/></td>
                       <td></td>
                     </tr>
                      <tr>
@@ -77,13 +78,17 @@ if(isset($_POST['edit'])){
                     <tr>
                       <th>Kelamin</th>
                       <td><select name="kelamin"  class="form-control">
-                          <option value="laki-laki">Laki-laki</option>
-                          <option value="perempuan">Perempuan</option>
+                          <option <?php if($result['kelamin']=="laki-laki"){ echo "selected"; } ?> value="laki-laki">Laki-laki</option>
+                          <option <?php if($result['kelamin']=="perempuan"){ echo "selected"; } ?> value="perempuan">Perempuan</option>
                         </select>
                       </td>
                       <td></td>
                     </tr>
-
+                    <tr>
+                      <th>Agama </th>
+                      <td><input type="text" class="form-control" name="agama" value="<?php echo $result['agama']; ?>"/></td>
+                      <td></td>
+                    </tr>
                     <tr>
                       <th>Alamat</th>
                       <td><textarea name="alamat"><?php echo $result['alamat'];?></textarea></td>
